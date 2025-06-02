@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Celestial Payment Test</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>CelestialPay - Relworx Test</title>
 </head>
 <body>
-  <h1>Celestial Payment Gateway Test</h1>
-  <button id="payBtn">Pay Now</button>
-  <div id="result"></div>
-  <script src="script.js"></script>
+  <h2>Test Payment - UGX</h2>
+
+  <form id="paymentForm">
+    <label>Email:</label><br>
+    <input type="email" id="email" required><br><br>
+
+    <label>Amount (UGX):</label><br>
+    <input type="number" id="amount" required><br><br>
+
+    <button type="submit">Pay Now</button>
+  </form>
+
+  <pre id="result" style="margin-top: 20px;"></pre>
+
+  <script>
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const responseDisplay = document.getElementById('result');
+      const payload = {
+        email: document.getElementById('email').value,
+        amount: document.getElementById('amount').value,
+        currency: "UGX"
+      };
+
+      try {
+        const res = await fetch("https://payments.relworx.com/api/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer cc04967106877e.4hDuzjCQsPIYawutluDZWQ"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        responseDisplay.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        responseDisplay.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
